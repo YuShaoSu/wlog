@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>城崎、一月 — prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #efeee9;
+  --ink: #14110f;
+  --ink-mid: #75706a;
+  --ink-light: #b8b2ab;
+  --margin: clamp(1.5rem, 8vw, 6rem);
+  --serif: "Noto Serif TC", "Songti TC", "Source Han Serif", serif;
+
+  /* placeholder photo color (stand-in for actual photography) */
+  --photo: #7a7368;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-weight: 300;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === Placeholder ("photo") === */
+.ph {
+  background-color: var(--photo);
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.08));
+  display: block;
+  width: 100%;
+}
+
+/* === caption === */
+.caption {
+  font-size: 0.78rem;
+  color: var(--ink-mid);
+  letter-spacing: 0.05em;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+/* === BLOCK: opening (image-contained, detail-first) === */
+.opening {
+  padding: 20vh var(--margin) 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.opening .ph {
+  max-width: 460px;
+  aspect-ratio: 3/4;
+}
+.opening .caption {
+  margin-top: 1.25rem;
+  max-width: 460px;
+  width: 100%;
+}
+
+/* === BLOCK: transition-text === */
+.transition-text {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--margin);
+}
+.transition-text .text {
+  font-size: 1rem;
+  letter-spacing: 0.5em;
+  color: var(--ink);
+  font-weight: 300;
+  margin-left: 0.5em;
+}
+
+/* === BLOCK: image-full === */
+.image-full { padding-block: 8vh; }
+.image-full .ph { height: 88vh; }
+
+/* === BLOCK: image-pair === */
+.image-pair {
+  padding: 14vh var(--margin);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.image-pair .ph { aspect-ratio: 3/4; }
+.image-pair .pair-caption {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* === BLOCK: image-contained === */
+.image-contained {
+  padding: 14vh var(--margin);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.image-contained .ph { aspect-ratio: 3/2; }
+.image-contained .caption { margin-top: 1rem; }
+
+/* === BLOCK: loop-silent (Ken Burns — "moving photograph") ===
+   The placeholder gets a more visible off-center gradient so the
+   slow scale+translate animation is actually observable. === */
+.loop-silent {
+  height: 90vh;
+  overflow: hidden;
+  position: relative;
+  margin: 8vh 0;
+}
+.loop-silent .ph {
+  height: 100%;
+  background-image:
+    radial-gradient(ellipse at 30% 35%, rgba(255,255,255,0.22), transparent 55%),
+    radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.25), transparent 55%);
+  animation: kenburns 32s ease-in-out infinite alternate;
+  transform-origin: center center;
+}
+@keyframes kenburns {
+  from { transform: scale(1.0) translate(0, 0); }
+  to   { transform: scale(1.08) translate(-1.5%, -1%); }
+}
+.loop-silent .caption {
+  position: absolute;
+  left: var(--margin);
+  bottom: 2rem;
+  color: var(--paper);
+  mix-blend-mode: difference;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  z-index: 2;
+}
+
+/* === BLOCK: image-layered (background + foreground overlay) ===
+   Background image sets scene; foreground image is the focal subject,
+   placed asymmetrically (default: lower-left). === */
+.image-layered {
+  padding: 14vh var(--margin);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.image-layered .layered-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/2;
+}
+.image-layered .bg {
+  position: absolute;
+  inset: 0;
+  background-color: #6b6962;
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(0,0,0,0.10));
+}
+.image-layered .fg {
+  position: absolute;
+  left: 8%;
+  bottom: 8%;
+  width: 32%;
+  aspect-ratio: 3/4;
+  background-color: #847b6f;
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(0,0,0,0.10));
+}
+.image-layered .caption {
+  position: absolute;
+  left: calc(8% + 32% + 2.5rem);
+  bottom: 8%;
+  max-width: 22ch;
+  color: var(--paper);
+  mix-blend-mode: difference;
+}
+
+/* === BLOCK: image-grid (density moment) === */
+.image-grid {
+  padding: 14vh var(--margin);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.image-grid .grid-caption {
+  font-size: 0.78rem;
+  color: var(--ink-mid);
+  letter-spacing: 0.05em;
+  margin-bottom: 2.5rem;
+}
+.image-grid .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.image-grid .grid .ph { aspect-ratio: 1; }
+
+/* === BLOCK: transition-still === */
+.transition-still { height: 100vh; }
+.transition-still .ph { height: 100%; }
+
+/* === BLOCK: pullquote === */
+.pullquote {
+  padding: 22vh var(--margin);
+  text-align: center;
+}
+.pullquote p {
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  font-weight: 300;
+  line-height: 1.9;
+  max-width: 32ch;
+  margin: 0 auto;
+  letter-spacing: 0.02em;
+}
+
+/* === BLOCK: title-end === */
+.title-end {
+  padding: 28vh var(--margin) 25vh;
+  text-align: center;
+}
+.title-end .romaji {
+  font-size: 0.7rem;
+  color: var(--ink-mid);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.title-end .title {
+  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  margin-left: 0.5em;
+}
+.title-end .date {
+  font-size: 0.7rem;
+  color: var(--ink-mid);
+  letter-spacing: 0.3em;
+  margin-top: 2rem;
+}
+
+/* === Sound toggle (minimal icon, no border) === */
+.sound-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--ink-mid);
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+.sound-toggle:hover { color: var(--ink); }
+.sound-toggle svg { width: 14px; height: 14px; }
+.sound-toggle .icon-on { display: none; }
+.sound-toggle.on .icon-on { display: block; }
+.sound-toggle.on .icon-off { display: none; }
+
+/* === Scroll reveal === */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.6s ease, transform 1.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.endspace { height: 25vh; }
+
+/* === Simple RWD === */
+@media (max-width: 720px) {
+  .image-pair { grid-template-columns: 1fr; }
+  .image-grid .grid { grid-template-columns: repeat(2, 1fr); }
+  .image-full .ph { height: 70vh; }
+  .loop-silent { height: 70vh; }
+  .image-layered .fg { width: 48%; bottom: 6%; }
+  .image-layered .caption {
+    position: static;
+    margin-top: 1.5rem;
+    color: var(--ink-mid);
+    mix-blend-mode: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .loop-silent .ph { animation: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<button class="sound-toggle" id="soundBtn" aria-label="切換聲音">
+  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <line x1="16" y1="9" x2="22" y2="15"/>
+    <line x1="22" y1="9" x2="16" y2="15"/>
+  </svg>
+  <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+  </svg>
+</button>
+
+<!-- BLOCK: opening (image-contained, detail-first, no title) -->
+<section class="opening reveal">
+  <div class="ph"></div>
+  <div class="caption">雨從昨晚就沒停</div>
+</section>
+
+<!-- BLOCK: transition-text (invisible chapter mark) -->
+<section class="transition-text reveal">
+  <div class="text">朝</div>
+</section>
+
+<!-- BLOCK: image-full -->
+<section class="image-full reveal">
+  <div class="ph"></div>
+</section>
+
+<!-- BLOCK: image-pair -->
+<section class="image-pair reveal">
+  <div class="ph"></div>
+  <div class="ph"></div>
+  <div class="pair-caption caption">玄関 ／ 階段</div>
+</section>
+
+<!-- BLOCK: image-contained -->
+<section class="image-contained reveal">
+  <div class="ph"></div>
+  <div class="caption">走到外湯，徒歩五分</div>
+</section>
+
+<!-- BLOCK: loop-silent (Ken Burns) -->
+<section class="loop-silent reveal">
+  <div class="ph"></div>
+  <div class="caption">湯気</div>
+</section>
+
+<!-- BLOCK: image-grid (density moment) -->
+<section class="image-grid reveal">
+  <div class="grid-caption">房間裡的東西</div>
+  <div class="grid">
+    <div class="ph"></div>
+    <div class="ph"></div>
+    <div class="ph"></div>
+    <div class="ph"></div>
+    <div class="ph"></div>
+    <div class="ph"></div>
+  </div>
+</section>
+
+<!-- BLOCK: image-layered (background + foreground overlay) -->
+<section class="image-layered reveal">
+  <div class="layered-frame">
+    <div class="bg ph"></div>
+    <div class="fg ph"></div>
+    <div class="caption">窓越しの庭</div>
+  </div>
+</section>
+
+<!-- BLOCK: transition-still -->
+<section class="transition-still reveal">
+  <div class="ph"></div>
+</section>
+
+<!-- BLOCK: transition-text (second invisible chapter mark) -->
+<section class="transition-text reveal">
+  <div class="text">夕暮れ</div>
+</section>
+
+<!-- BLOCK: image-full -->
+<section class="image-full reveal">
+  <div class="ph"></div>
+</section>
+
+<!-- BLOCK: pullquote (used sparingly) -->
+<section class="pullquote reveal">
+  <p>湯から上がると、知らない街がすこし、自分のものになっている。</p>
+</section>
+
+<!-- BLOCK: image-contained (closing detail) -->
+<section class="image-contained reveal">
+  <div class="ph"></div>
+  <div class="caption"></div>
+</section>
+
+<!-- BLOCK: title-end (title revealed at end) -->
+<section class="title-end reveal">
+  <div class="romaji">Kinosaki Onsen</div>
+  <div class="title">城崎、一月</div>
+  <div class="date">2024 / 01</div>
+</section>
+
+<div class="endspace"></div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const soundBtn = document.getElementById('soundBtn');
+  soundBtn.addEventListener('click', () => {
+    soundBtn.classList.toggle('on');
+  });
+</script>
+
+</body>
+</html>
