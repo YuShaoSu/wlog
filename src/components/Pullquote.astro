@@ -1,0 +1,25 @@
+---
+/** 被強調的短句，一趟最多 2 次 — spec §4.2 pullquote */
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+---
+<section class="pullquote reveal">
+  <p>{text}</p>
+</section>
+
+<style>
+  .pullquote {
+    padding: 22vh var(--margin);
+    text-align: center;
+  }
+  p {
+    font-size: var(--fs-pullquote);
+    font-weight: 300;
+    line-height: 1.9;
+    max-width: 32ch;
+    margin: 0 auto;
+    letter-spacing: 0.02em;
+  }
+</style>

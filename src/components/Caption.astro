@@ -1,0 +1,18 @@
+---
+/** 小字邊註 — spec §4.2。永遠依附於圖區塊，不獨立成段。 */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+<div class:list={['caption', className]}><slot /></div>
+
+<style>
+  .caption {
+    font-size: var(--fs-caption);
+    color: var(--ink-mid);
+    letter-spacing: 0.05em;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+/** 標題在結尾出現，整個作品唯一的標題位置 — spec §4.4 title-end */
+interface Props {
+  title: string;
+  romaji: string;
+  date: string;
+}
+const { title, romaji, date } = Astro.props;
+---
+<section class="title-end reveal">
+  <div class="romaji">{romaji}</div>
+  <h1 class="title">{title}</h1>
+  <div class="date">{date}</div>
+</section>
+
+<style>
+  .title-end {
+    padding: 28vh var(--margin) 25vh;
+    text-align: center;
+  }
+  .romaji {
+    font-size: var(--fs-meta);
+    color: var(--ink-mid);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .title {
+    font-size: var(--fs-title);
+    font-weight: 400;
+    letter-spacing: 0.5em;
+    margin-left: 0.5em;
+  }
+  .date {
+    font-size: var(--fs-meta);
+    color: var(--ink-mid);
+    letter-spacing: 0.3em;
+    margin-top: 2rem;
+  }
+</style>

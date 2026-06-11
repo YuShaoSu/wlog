@@ -1,0 +1,38 @@
+---
+/** 兩張並置，對比／節奏／因果 — spec §4.1 image-pair */
+import Media from './Media.astro';
+import Caption from './Caption.astro';
+
+interface Props {
+  src?: [string?, string?];
+  alt?: [string?, string?];
+  caption?: string;
+}
+const { src = [], alt = [], caption } = Astro.props;
+---
+<section class="image-pair reveal">
+  <div class="frame"><Media src={src[0]} alt={alt[0]} /></div>
+  <div class="frame"><Media src={src[1]} alt={alt[1]} /></div>
+  {caption && <Caption class="pair-caption">{caption}</Caption>}
+</section>
+
+<style>
+  .image-pair {
+    padding: var(--block-pad) var(--margin);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .frame { aspect-ratio: 3/4; }
+  .pair-caption {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .image-pair { grid-template-columns: 1fr; }
+  }
+</style>

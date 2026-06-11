@@ -1,0 +1,26 @@
+---
+/** 滿版單張照片，電影感的關鍵單位 — spec §4.1 image-full */
+import Media from './Media.astro';
+import Caption from './Caption.astro';
+
+interface Props {
+  src?: string;
+  alt?: string;
+  caption?: string;
+}
+const { src, alt, caption } = Astro.props;
+---
+<section class="image-full reveal">
+  <div class="frame"><Media src={src} alt={alt} /></div>
+  {caption && <Caption class="full-caption">{caption}</Caption>}
+</section>
+
+<style>
+  .image-full { padding-block: 8vh; }
+  .frame { height: 88vh; }
+  .full-caption { padding: 1rem var(--margin) 0; }
+
+  @media (max-width: 720px) {
+    .frame { height: 70vh; }
+  }
+</style>

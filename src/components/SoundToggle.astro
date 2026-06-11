@@ -1,0 +1,97 @@
+---
+/**
+ * 聲音層唯一的啟動點 — spec §4.5 / §7
+ * 預設靜音；開啟後播放一趟一首的背景音，跨區塊不中斷。
+ * featured video 播放時淡出，結束後淡入恢復。
+ */
+interface Props {
+  audioSrc?: string;
+}
+const { audioSrc } = Astro.props;
+---
+<button class="sound-toggle" id="soundBtn" aria-label="切換聲音" data-audio={audioSrc}>
+  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <line x1="16" y1="9" x2="22" y2="15"/>
+    <line x1="22" y1="9" x2="16" y2="15"/>
+  </svg>
+  <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+  </svg>
+</button>
+
+<style>
+  .sound-toggle {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--ink-mid);
+    cursor: pointer;
+    z-index: 10;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+  }
+  .sound-toggle:hover { color: var(--ink); }
+  .sound-toggle svg { width: 14px; height: 14px; }
+  .sound-toggle .icon-on { display: none; }
+  .sound-toggle.on .icon-on { display: block; }
+  .sound-toggle.on .icon-off { display: none; }
+</style>
+
+<script>
+  const btn = document.getElementById('soundBtn');
+  if (btn) {
+    const src = btn.dataset.audio;
+    const BASE_VOLUME = 0.45; // spec §7.5
+    let audio: HTMLAudioElement | null = null;
+    let fadeTimer: ReturnType<typeof setInterval> | undefined;
+
+    const fadeTo = (target: number, ms = 800, onDone?: () => void) => {
+      if (!audio) return;
+      clearInterval(fadeTimer);
+      const start = audio.volume;
+      const t0 = performance.now();
+      fadeTimer = setInterval(() => {
+        if (!audio) return;
+        const k = Math.min((performance.now() - t0) / ms, 1);
+        audio.volume = start + (target - start) * k;
+        if (k === 1) {
+          clearInterval(fadeTimer);
+          onDone?.();
+        }
+      }, 30);
+    };
+
+    btn.addEventListener('click', () => {
+      const on = btn.classList.toggle('on');
+      if (!src) return;
+      if (on) {
+        if (!audio) {
+          audio = new Audio(src);
+          audio.loop = true;
+        }
+        audio.volume = 0;
+        audio.play();
+        fadeTo(BASE_VOLUME);
+      } else if (audio) {
+        fadeTo(0, 600, () => audio?.pause());
+      }
+    });
+
+    // featured video 播放時背景音淡出，結束後恢復 — spec §7.4
+    document.addEventListener('featured-video-play', () => {
+      if (btn.classList.contains('on') && audio) fadeTo(0, 500);
+    });
+    document.addEventListener('featured-video-end', () => {
+      if (btn.classList.contains('on') && audio) fadeTo(BASE_VOLUME, 1000);
+    });
+  }
+</script>

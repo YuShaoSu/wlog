@@ -1,0 +1,79 @@
+---
+/**
+ * 背景圖＋前景圖層疊構圖 — spec §4.1 image-layered
+ * 兩張圖都是平等的編輯影像：不模糊、不暗化、前景不加陰影。
+ */
+import Media from './Media.astro';
+import Caption from './Caption.astro';
+import type { LayeredPosition } from '../types';
+
+interface Props {
+  bg?: string;
+  fg?: string;
+  alt?: string;
+  caption?: string;
+  position?: LayeredPosition;
+}
+const { bg, fg, alt, caption, position = 'lower-left' } = Astro.props;
+---
+<section class="image-layered reveal">
+  <div class:list={['layered-frame', position]}>
+    <div class="bg"><Media src={bg} alt={alt} /></div>
+    <div class="fg"><Media src={fg} alt="" /></div>
+    {caption && <Caption class="layered-caption">{caption}</Caption>}
+  </div>
+</section>
+
+<style>
+  .image-layered {
+    padding: var(--block-pad) var(--margin);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .layered-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3/2;
+  }
+  .bg { position: absolute; inset: 0; }
+  .fg {
+    position: absolute;
+    width: 32%;
+    aspect-ratio: 3/4;
+  }
+
+  /* 位置變體 — spec §4.1 */
+  .lower-left  .fg { left: 8%;  bottom: 8%; }
+  .lower-right .fg { right: 8%; bottom: 8%; }
+  .upper-left  .fg { left: 8%;  top: 8%; }
+  .upper-right .fg { right: 8%; top: 8%; }
+  .bleed-bottom .fg { left: 8%; bottom: -10%; }
+  .bleed-bottom { margin-bottom: calc(0.1 * (min(100%, 1400px)) * 2 / 3); }
+
+  .layered-caption {
+    position: absolute;
+    max-width: 22ch;
+    color: var(--paper);
+    mix-blend-mode: difference;
+  }
+  .lower-left .layered-caption,
+  .bleed-bottom .layered-caption { left: calc(8% + 32% + 2.5rem); bottom: 8%; }
+  .lower-right .layered-caption { right: calc(8% + 32% + 2.5rem); bottom: 8%; text-align: right; }
+  .upper-left .layered-caption { left: calc(8% + 32% + 2.5rem); top: 8%; }
+  .upper-right .layered-caption { right: calc(8% + 32% + 2.5rem); top: 8%; text-align: right; }
+
+  @media (max-width: 720px) {
+    .fg { width: 48%; }
+    .lower-left .fg, .lower-right .fg { bottom: 6%; }
+    .layered-caption,
+    .lower-left .layered-caption, .lower-right .layered-caption,
+    .upper-left .layered-caption, .upper-right .layered-caption,
+    .bleed-bottom .layered-caption {
+      position: static;
+      margin-top: 1.5rem;
+      color: var(--ink-mid);
+      mix-blend-mode: normal;
+      text-align: left;
+    }
+  }
+</style>

@@ -1,0 +1,15 @@
+---
+/**
+ * Prototype：城崎旅程，由設計系統元件 + Trip JSON 渲染。
+ * 與 prototype/kinosaki-prototype.html 對照——同樣的視覺，但版面來自可重用元件。
+ */
+import TripLayout from '../layouts/TripLayout.astro';
+import BlockRenderer from '../components/BlockRenderer.astro';
+import type { Trip } from '../types';
+import tripData from '../data/trips/kinosaki-2024-01.json';
+
+const trip = tripData as Trip;
+---
+<TripLayout title={`${trip.title} — prototype`} ambientAudio={trip.ambient_audio}>
+  <BlockRenderer blocks={trip.blocks} />
+</TripLayout>

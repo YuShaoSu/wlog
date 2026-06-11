@@ -1,0 +1,42 @@
+---
+/** 密集瞬間，一趟最多 1–2 次 — spec §4.1 image-grid */
+import Media from './Media.astro';
+import Caption from './Caption.astro';
+
+interface Props {
+  src?: (string | undefined)[];
+  alt?: string[];
+  caption?: string;
+  /** 無素材時的佔位格數（3 的倍數） */
+  count?: number;
+}
+const { src, alt = [], caption, count = 6 } = Astro.props;
+const cells = src ?? Array.from({ length: count }, () => undefined);
+---
+<section class="image-grid reveal">
+  {caption && <Caption class="grid-caption">{caption}</Caption>}
+  <div class="grid">
+    {cells.map((s, i) => (
+      <div class="cell"><Media src={s} alt={alt[i]} /></div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .image-grid {
+    padding: var(--block-pad) var(--margin);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .grid-caption { margin-bottom: 2.5rem; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .cell { aspect-ratio: 1; }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

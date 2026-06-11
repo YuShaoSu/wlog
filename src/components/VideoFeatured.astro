@@ -1,0 +1,89 @@
+---
+/**
+ * 有聲影片，「請停下來看」的時刻 — spec §4.1 video-featured
+ * 不 autoplay；點擊播放。播放時透過事件讓背景音淡出（spec §7.4）。
+ * 素材未就緒時 fallback 為佔位 + play icon 暗示。
+ */
+import Media from './Media.astro';
+import Caption from './Caption.astro';
+
+interface Props {
+  src?: string;
+  poster?: string;
+  caption?: string;
+}
+const { src, poster, caption } = Astro.props;
+---
+<section class="video-featured reveal">
+  <div class="frame" data-video-featured>
+    {src ? (
+      <video src={src} poster={poster} preload="metadata" playsinline></video>
+    ) : (
+      <Media src={poster} alt="" />
+    )}
+    <button class="play" aria-label="播放影片">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round">
+        <polygon points="9 6, 18 12, 9 18" />
+      </svg>
+    </button>
+  </div>
+  {caption && <Caption class="below">{caption}</Caption>}
+</section>
+
+<style>
+  .video-featured {
+    padding: var(--block-pad) var(--margin);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .frame {
+    position: relative;
+    aspect-ratio: 16/9;
+  }
+  .play {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--paper);
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  .play svg {
+    width: 48px;
+    height: 48px;
+    mix-blend-mode: difference;
+  }
+  .frame.playing .play { opacity: 0; pointer-events: none; }
+  .below { margin-top: 1rem; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video-featured]').forEach((frame) => {
+    const video = frame.querySelector('video');
+    const btn = frame.querySelector('.play');
+    if (!video || !btn) return;
+
+    btn.addEventListener('click', () => {
+      frame.classList.add('playing');
+      video.volume = 1.0;
+      video.controls = true;
+      // 通知 sound layer 淡出（spec §7.4）
+      document.dispatchEvent(new CustomEvent('featured-video-play'));
+      video.play();
+    });
+    video.addEventListener('ended', () => {
+      frame.classList.remove('playing');
+      video.controls = false;
+      document.dispatchEvent(new CustomEvent('featured-video-end'));
+    });
+    video.addEventListener('pause', () => {
+      document.dispatchEvent(new CustomEvent('featured-video-end'));
+    });
+  });
+</script>

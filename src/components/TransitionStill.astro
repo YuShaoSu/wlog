@@ -1,0 +1,17 @@
+---
+/** 整頁一張照片，無 caption，純畫面的呼吸 — spec §4.3 transition-still */
+import Media from './Media.astro';
+
+interface Props {
+  src?: string;
+  alt?: string;
+}
+const { src, alt } = Astro.props;
+---
+<section class="transition-still reveal">
+  <Media src={src} alt={alt} />
+</section>
+
+<style>
+  .transition-still { height: 100vh; }
+</style>

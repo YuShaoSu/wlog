@@ -1,0 +1,73 @@
+---
+/**
+ * 設計系統目錄頁：逐一展示每個區塊元件與其變體，供開發對照用。
+ * 非正式內容頁——標籤刻意使用系統等寬字以區隔。
+ */
+import TripLayout from '../layouts/TripLayout.astro';
+import ImageFull from '../components/ImageFull.astro';
+import ImageContained from '../components/ImageContained.astro';
+import ImagePair from '../components/ImagePair.astro';
+import ImageGrid from '../components/ImageGrid.astro';
+import ImageLayered from '../components/ImageLayered.astro';
+import LoopSilent from '../components/LoopSilent.astro';
+import VideoFeatured from '../components/VideoFeatured.astro';
+import Pullquote from '../components/Pullquote.astro';
+import TransitionText from '../components/TransitionText.astro';
+import TransitionStill from '../components/TransitionStill.astro';
+import TransitionBlank from '../components/TransitionBlank.astro';
+import TitleEnd from '../components/TitleEnd.astro';
+---
+<TripLayout title="Block Vocabulary — 設計系統目錄">
+  <div class="label">image-contained · variant=opening</div>
+  <ImageContained variant="opening" caption="開頭 detail-first 切入" />
+
+  <div class="label">image-contained · standard</div>
+  <ImageContained caption="留邊單張照片，編輯感較強" />
+
+  <div class="label">image-full</div>
+  <ImageFull />
+
+  <div class="label">image-pair</div>
+  <ImagePair caption="左 ／ 右" />
+
+  <div class="label">image-grid</div>
+  <ImageGrid count={6} caption="密集瞬間" />
+
+  <div class="label">image-layered · lower-left</div>
+  <ImageLayered caption="背景與前景的對話" position="lower-left" />
+
+  <div class="label">image-layered · upper-right</div>
+  <ImageLayered position="upper-right" />
+
+  <div class="label">loop-silent（Ken Burns）</div>
+  <LoopSilent caption="湯気" />
+
+  <div class="label">video-featured（無素材 fallback）</div>
+  <VideoFeatured caption="點擊播放" />
+
+  <div class="label">pullquote</div>
+  <Pullquote text="湯から上がると、知らない街がすこし、自分のものになっている。" />
+
+  <div class="label">transition-text</div>
+  <TransitionText text="朝" />
+
+  <div class="label">transition-still</div>
+  <TransitionStill />
+
+  <div class="label">transition-blank（60vh）</div>
+  <TransitionBlank height="60vh" />
+
+  <div class="label">title-end</div>
+  <TitleEnd title="城崎、一月" romaji="Kinosaki Onsen" date="2024 / 01" />
+
+  <style>
+    .label {
+      font-family: ui-monospace, monospace;
+      font-size: 0.7rem;
+      color: var(--ink-light);
+      letter-spacing: 0.1em;
+      padding: 2rem var(--margin) 0;
+      border-top: 1px solid var(--ink-light);
+    }
+  </style>
+</TripLayout>

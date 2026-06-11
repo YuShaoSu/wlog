@@ -1,0 +1,28 @@
+---
+/** 整頁一行短文字，無形章節標記 — spec §4.3 transition-text */
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+---
+<section class="transition-text reveal">
+  <div class="text">{text}</div>
+</section>
+
+<style>
+  .transition-text {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--margin);
+  }
+  .text {
+    font-size: var(--fs-transition);
+    letter-spacing: 0.5em;
+    /* letter-spacing 會推擠文字右移，補正置中 — spec §3.2 */
+    margin-left: 0.5em;
+    color: var(--ink);
+    font-weight: 300;
+  }
+</style>
