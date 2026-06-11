@@ -1,0 +1,22 @@
+{
+  "slug": "kinosaki-2024-01",
+  "title": "城崎、一月",
+  "romaji": "Kinosaki Onsen",
+  "date": "2024 / 01",
+  "blocks": [
+    { "type": "image-contained", "variant": "opening", "caption": "雨從昨晚就沒停" },
+    { "type": "transition-text", "text": "朝" },
+    { "type": "image-full" },
+    { "type": "image-pair", "caption": "玄関 ／ 階段" },
+    { "type": "image-contained", "caption": "走到外湯，徒歩五分" },
+    { "type": "loop-silent", "caption": "湯気" },
+    { "type": "image-grid", "count": 6, "caption": "房間裡的東西" },
+    { "type": "image-layered", "caption": "窓越しの庭", "position": "lower-left" },
+    { "type": "transition-still" },
+    { "type": "transition-text", "text": "夕暮れ" },
+    { "type": "image-full" },
+    { "type": "pullquote", "text": "湯から上がると、知らない街がすこし、自分のものになっている。" },
+    { "type": "image-contained" },
+    { "type": "title-end", "title": "城崎、一月", "romaji": "Kinosaki Onsen", "date": "2024 / 01" }
+  ]
+}

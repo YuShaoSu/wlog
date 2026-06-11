@@ -1,0 +1,40 @@
+---
+/**
+ * 將 Trip JSON 的 blocks 陣列轉成元件 — spec §8
+ * 新增一趟旅行 = 一份 JSON，不需要寫任何版面程式碼。
+ */
+import type { Block } from '../types';
+import ImageFull from './ImageFull.astro';
+import ImageContained from './ImageContained.astro';
+import ImagePair from './ImagePair.astro';
+import ImageGrid from './ImageGrid.astro';
+import ImageLayered from './ImageLayered.astro';
+import LoopSilent from './LoopSilent.astro';
+import VideoFeatured from './VideoFeatured.astro';
+import Pullquote from './Pullquote.astro';
+import TransitionText from './TransitionText.astro';
+import TransitionStill from './TransitionStill.astro';
+import TransitionBlank from './TransitionBlank.astro';
+import TitleEnd from './TitleEnd.astro';
+
+interface Props {
+  blocks: Block[];
+}
+const { blocks } = Astro.props;
+---
+{blocks.map((block) => {
+  switch (block.type) {
+    case 'image-full':       return <ImageFull {...block} />;
+    case 'image-contained':  return <ImageContained {...block} />;
+    case 'image-pair':       return <ImagePair {...block} />;
+    case 'image-grid':       return <ImageGrid {...block} />;
+    case 'image-layered':    return <ImageLayered {...block} />;
+    case 'loop-silent':      return <LoopSilent {...block} />;
+    case 'video-featured':   return <VideoFeatured {...block} />;
+    case 'pullquote':        return <Pullquote {...block} />;
+    case 'transition-text':  return <TransitionText {...block} />;
+    case 'transition-still': return <TransitionStill {...block} />;
+    case 'transition-blank': return <TransitionBlank {...block} />;
+    case 'title-end':        return <TitleEnd {...block} />;
+  }
+})}

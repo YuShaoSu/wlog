@@ -1,0 +1,25 @@
+---
+/**
+ * 內部共用：有素材時輸出 <img>，否則輸出色塊佔位。
+ * 真實素材導入後，將改以 astro:assets 的 <Image> 做 build-time 最佳化（spec §9.2）。
+ */
+interface Props {
+  src?: string;
+  alt?: string;
+  eager?: boolean;
+  class?: string;
+}
+const { src, alt = '', eager = false, class: className } = Astro.props;
+---
+{src
+  ? <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} class={className} />
+  : <div class:list={['ph', className]} role="img" aria-label={alt}></div>}
+
+<style>
+  .ph {
+    background-color: var(--photo);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.08));
+    width: 100%;
+    height: 100%;
+  }
+</style>

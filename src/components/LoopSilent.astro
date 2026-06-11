@@ -1,0 +1,68 @@
+---
+/**
+ * 會動的照片 — spec §4.1 loop-silent
+ * 圖片走 Ken Burns；短影片（.mp4/.webm）則無聲循環播放。永遠靜音。
+ */
+import Media from './Media.astro';
+import Caption from './Caption.astro';
+
+interface Props {
+  src?: string;
+  alt?: string;
+  caption?: string;
+}
+const { src, alt, caption } = Astro.props;
+const isVideo = !!src && /\.(mp4|webm)$/i.test(src);
+---
+<section class="loop-silent reveal">
+  {isVideo
+    ? <video src={src} autoplay loop muted playsinline aria-label={alt}></video>
+    : <div class:list={['kenburns', { 'is-ph': !src }]}><Media src={src} alt={alt} /></div>}
+  {caption && <Caption class="loop-caption">{caption}</Caption>}
+</section>
+
+<style>
+  .loop-silent {
+    height: 90vh;
+    overflow: hidden;
+    position: relative;
+    margin: 8vh 0;
+  }
+  .kenburns {
+    height: 100%;
+    animation: kenburns 32s ease-in-out infinite alternate;
+    transform-origin: center center;
+  }
+  /* 佔位時加上偏心漸層，讓緩慢的縮放平移實際可見 */
+  .kenburns.is-ph {
+    background-color: var(--photo);
+    background-image:
+      radial-gradient(ellipse at 30% 35%, rgba(255,255,255,0.22), transparent 55%),
+      radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.25), transparent 55%);
+  }
+  .kenburns.is-ph :global(.ph) { background: none; }
+
+  @keyframes kenburns {
+    from { transform: scale(1.0) translate(0, 0); }
+    to   { transform: scale(1.08) translate(-1.5%, -1%); }
+  }
+
+  .loop-caption {
+    position: absolute;
+    left: var(--margin);
+    bottom: 2rem;
+    color: var(--paper);
+    mix-blend-mode: difference;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    z-index: 2;
+  }
+
+  @media (max-width: 720px) {
+    .loop-silent { height: 70vh; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kenburns { animation: none; }
+  }
+</style>

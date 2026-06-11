@@ -16,23 +16,33 @@
 
 ```
 docs/spec.md                      設計規範 v1（視覺 tokens、區塊詞彙、動態詞彙、資料模型、部署建議）
-prototype/kinosaki-prototype.html 參考實作（純 HTML/CSS/JS，以色塊代替照片）
+prototype/kinosaki-prototype.html 原始參考實作（純 HTML/CSS/JS，以色塊代替照片）
+src/
+  styles/global.css               視覺 tokens、base、scroll reveal、reduced-motion
+  types.ts                        Trip / Block 資料模型（spec §8）
+  components/                     區塊詞彙元件庫（spec §4，一個區塊一個元件）
+  layouts/TripLayout.astro        旅程頁共用外框（字體、reveal script、sound toggle）
+  data/trips/*.json               每趟旅行一份 JSON
+  pages/index.astro               Prototype：城崎旅程（由 JSON + 元件渲染）
+  pages/blocks.astro              設計系統目錄頁（逐一展示所有區塊與變體）
 ```
 
-## 快速預覽
-
-prototype 是單一 HTML 檔，直接用瀏覽器開啟即可：
+## 開發
 
 ```sh
-open prototype/kinosaki-prototype.html
-# 或起一個本地 server
-npx serve prototype
+npm install
+npm run dev       # http://localhost:4321 （/ 旅程 prototype，/blocks 元件目錄）
+npm run build     # 靜態輸出到 dist/
 ```
 
-## 下一步（依 spec 第 9 節）
+## 新增一趟旅行
 
-- 技術選型：推薦 **Astro**（build-time 影像最佳化）
+在 `src/data/trips/` 新增一份 JSON（schema 見 `src/types.ts` 與 `docs/spec.md` §8），
+再加一個對應的 page 引用 `BlockRenderer` 即可。素材未就緒的區塊省略 `src`，會以色塊佔位顯示。
+
+## 部署（依 spec §9.7）
+
 - 託管：Cloudflare Pages（主站）＋ Cloudflare Stream / R2（影片）
-- 內容模型：每趟旅行一份 trip JSON（schema 見 `docs/spec.md` 第 8 節）
+- 真實素材導入後，`Media.astro` 將改用 `astro:assets` 做 build-time 影像最佳化
 
 詳細規格請見 [`docs/spec.md`](docs/spec.md)。

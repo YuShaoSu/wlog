@@ -1,0 +1,48 @@
+---
+/**
+ * 旅程頁面共用外框：字體載入、scroll reveal、sound toggle、結尾留白。
+ */
+import SoundToggle from '../components/SoundToggle.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  ambientAudio?: string;
+}
+const { title, ambientAudio } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <SoundToggle audioSrc={ambientAudio} />
+
+  <slot />
+
+  <div class="endspace"></div>
+
+  <style>
+    .endspace { height: 25vh; }
+  </style>
+
+  <script>
+    // Scroll reveal — spec §5.1，閾值 0.12
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

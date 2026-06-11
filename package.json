@@ -1,0 +1,16 @@
+{
+  "name": "interior-showcase",
+  "version": "0.1.0",
+  "description": "旅程頁面 — 記錄旅遊的網頁作品系列",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "astro": "^6.4.6",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,12 @@
+---
+/** 純色頁面，最極端的呼吸。一趟最多 1 次 — spec §4.3 transition-blank */
+interface Props {
+  height?: string;
+}
+const { height = '70vh' } = Astro.props;
+---
+<section class="transition-blank" style={`height: ${height}`}></section>
+
+<style>
+  .transition-blank { background: var(--paper); }
+</style>

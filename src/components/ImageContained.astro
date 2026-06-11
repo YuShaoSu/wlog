@@ -1,0 +1,47 @@
+---
+/**
+ * 留邊單張照片 — spec §4.1 image-contained
+ * variant="opening"：開頭 detail-first 切入（直幅、較窄、20vh 上留白）。
+ */
+import Media from './Media.astro';
+import Caption from './Caption.astro';
+
+interface Props {
+  src?: string;
+  alt?: string;
+  caption?: string;
+  variant?: 'opening' | 'standard';
+}
+const { src, alt, caption, variant = 'standard' } = Astro.props;
+---
+<section class:list={['image-contained', 'reveal', variant]}>
+  <div class="frame"><Media src={src} alt={alt} eager={variant === 'opening'} /></div>
+  {caption && <Caption class="below">{caption}</Caption>}
+</section>
+
+<style>
+  .image-contained.standard {
+    padding: var(--block-pad) var(--margin);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .standard .frame { aspect-ratio: 3/2; }
+  .standard .below { margin-top: 1rem; }
+
+  .image-contained.opening {
+    padding: 20vh var(--margin) 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .opening .frame {
+    width: 100%;
+    max-width: 460px;
+    aspect-ratio: 3/4;
+  }
+  .opening .below {
+    margin-top: 1.25rem;
+    max-width: 460px;
+    width: 100%;
+  }
+</style>
